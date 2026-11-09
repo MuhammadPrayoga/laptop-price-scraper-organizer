@@ -1,6 +1,6 @@
 # Laptop Price Scraper & Organizer
 
-Aplikasi **Command Line Interface (CLI)** berbasis Python untuk mengambil, membersihkan, menyaring, mengurutkan, dan menyimpan data harga laptop secara otomatis. Proyek ini dibuat sebagai implementasi materi **UTS Automation Systems**.
+Aplikasi **Command Line Interface (CLI)** berbasis Python untuk mengambil, membersihkan, menyaring, mengurutkan, dan menyimpan data harga laptop secara otomatis.
 
 ## Sumber data
 
@@ -9,7 +9,6 @@ Aplikasi **Command Line Interface (CLI)** berbasis Python untuk mengambil, membe
 - Informasi yang diambil: nama laptop, harga, deskripsi, jumlah ulasan, URL produk, dan waktu scraping.
 - Informasi tambahan hasil pemrosesan: harga numerik dalam USD serta kapasitas RAM jika tercantum dalam deskripsi.
 
-> **Catatan:** Website tersebut adalah situs latihan. Harga yang tercantum **bukan harga pasar aktual**. Aplikasi ini adalah prototipe pengambilan dan perbandingan data, bukan alat pemantauan harga toko sungguhan.
 
 ## Fitur
 
@@ -45,11 +44,10 @@ Aplikasi **Command Line Interface (CLI)** berbasis Python untuk mengambil, membe
 ### 1. Clone repository
 
 ```bash
-git clone https://github.com/USERNAME/laptop-price-scraper-organizer.git
+git clone https://github.com/MuhammadPrayoga/laptop-price-scraper-organizer.git
 cd laptop-price-scraper-organizer
 ```
 
-Ganti `USERNAME` dengan username GitHub pemilik repository.
 
 ### 2. Buat virtual environment
 
@@ -200,21 +198,3 @@ python main.py --input file_tidak_ada.csv
 # 5. Uji validasi argumen
 python main.py --limit 0
 ```
-
-Hasil aktual scraping bergantung pada akses internet dan struktur website saat eksekusi. Untuk membuktikan persyaratan UTS, periksa jumlah baris dataset, isi ZIP, serta tampilan terminal.
-
-## Etika penggunaan
-
-- Gunakan hanya untuk pembelajaran dan sumber yang mengizinkan akses.
-- Jangan melewati login, CAPTCHA, atau pembatasan situs.
-- Hindari permintaan berlebihan; program menggunakan jeda antarhalaman.
-- Jangan mengumpulkan data pribadi sensitif.
-
-## Informasi akademik
-
-- Mata kuliah: Automation Systems
-- Bentuk tugas: Ujian Tengah Semester (proyek kelompok)
-- Program studi: Teknik Informatika
-- Universitas: Universitas Pelita Bangsa
-
-Nama anggota dan nomor kelompok dapat ditambahkan setelah data kelompok ditetapkan.
