@@ -1,6 +1,6 @@
 # Laptop Price Scraper & Organizer
 
-Aplikasi **Command Line Interface (CLI)** berbasis Python untuk mengambil, membersihkan, menyaring, mengurutkan, dan menyimpan data harga laptop secara otomatis.
+Aplikasi **Command Line Interface (CLI)** berbasis Python untuk mengambil, membersihkan, menyaring, mengurutkan, dan menyimpan data harga laptop secara otomatis. Proyek ini dibuat sebagai implementasi materi **UTS Automation Systems**.
 
 ## Sumber data
 
@@ -9,6 +9,7 @@ Aplikasi **Command Line Interface (CLI)** berbasis Python untuk mengambil, membe
 - Informasi yang diambil: nama laptop, harga, deskripsi, jumlah ulasan, URL produk, dan waktu scraping.
 - Informasi tambahan hasil pemrosesan: harga numerik dalam USD serta kapasitas RAM jika tercantum dalam deskripsi.
 
+> **Catatan:** Website tersebut adalah situs latihan. Harga yang tercantum **bukan harga pasar aktual**. Aplikasi ini adalah prototipe pengambilan dan perbandingan data, bukan alat pemantauan harga toko sungguhan.
 
 ## Fitur
 
@@ -19,7 +20,7 @@ Aplikasi **Command Line Interface (CLI)** berbasis Python untuk mengambil, membe
 5. Menyimpan data mentah ke `data/raw_data.txt` dan hasil olahan ke `output/hasil_scraping.csv`.
 6. Membuat ringkasan statistik pada `output/laporan.txt` dan menampilkannya di terminal.
 7. Membuat folder yang diperlukan secara otomatis dengan `pathlib`.
-8. Membuat serta memverifikasi backup `backup/backup_data.zip` jika argumen `--backup` digunakan.
+8. Membuat serta memverifikasi backup `backup/backup_data.zip` secara otomatis setelah pemrosesan berhasil (kecuali memakai `--no-backup`).
 9. Membaca kembali CSV yang sudah tersimpan menggunakan `--input`, tanpa koneksi ke website.
 10. Menangani kesalahan koneksi, hasil kosong, file tidak ditemukan, serta argumen yang tidak valid.
 
@@ -47,7 +48,6 @@ Aplikasi **Command Line Interface (CLI)** berbasis Python untuk mengambil, membe
 git clone https://github.com/MuhammadPrayoga/laptop-price-scraper-organizer.git
 cd laptop-price-scraper-organizer
 ```
-
 
 ### 2. Buat virtual environment
 
@@ -80,10 +80,16 @@ python -m pip install -r requirements.txt
 
 ## Cara penggunaan
 
-### Mengambil 50 laptop dan membuat backup
+**Pengaturan default:** target **30 laptop**, CSV dan laporan TXT tersimpan, dan backup ZIP dibuat secara otomatis.
 
 ```bash
-python main.py --limit 50 --backup
+python main.py
+```
+
+### Mengambil 30 laptop dan membuat backup otomatis
+
+```bash
+python main.py
 ```
 
 ### Filter nama/deskripsi laptop
@@ -95,25 +101,25 @@ python main.py --keyword ThinkPad --limit 30 --backup
 ### Mengurutkan harga tertinggi ke terendah
 
 ```bash
-python main.py --limit 50 --sort desc
+python main.py --limit 30 --sort desc
 ```
 
 ### Filter harga dalam USD
 
 ```bash
-python main.py --limit 50 --min-price 500 --max-price 1000 --backup
+python main.py --limit 30 --min-price 500 --max-price 1000 --backup
 ```
 
 ### Menentukan folder hasil
 
 ```bash
-python main.py --limit 50 --output hasil_laptop --backup
+python main.py --limit 30 --output hasil_laptop --backup
 ```
 
 ### Membatasi jumlah halaman yang diakses
 
 ```bash
-python main.py --limit 50 --max-pages 10
+python main.py --limit 30 --max-pages 10
 ```
 
 ### Memproses kembali CSV lokal tanpa web scraping
@@ -121,7 +127,7 @@ python main.py --limit 50 --max-pages 10
 Jalankan perintah ini **setelah CSV dihasilkan**:
 
 ```bash
-python main.py --input output/hasil_scraping.csv --limit 50 --sort name --backup
+python main.py --input output/hasil_scraping.csv --limit 30 --sort name --backup
 ```
 
 ### Melihat daftar argumen
@@ -135,17 +141,18 @@ python main.py --help
 | Argumen | Keterangan | Default |
 |---|---|---|
 | `--url` | URL awal katalog laptop | URL situs latihan |
-| `--limit` | Target jumlah **record valid yang lolos filter** | `50` |
+| `--limit` | Target jumlah **record valid yang lolos filter** | `30` |
 | `--keyword` | Kata kunci pada nama atau deskripsi | Tanpa filter |
 | `--sort` | `asc`, `desc`, atau `name` | `asc` |
 | `--min-price` | Harga minimum dalam USD | Tanpa batas |
 | `--max-price` | Harga maksimum dalam USD | Tanpa batas |
 | `--output` | Nama/path folder output | `output` |
-| `--backup` | Aktifkan pembuatan ZIP | Tidak aktif |
+| `--backup` | Membuat backup ZIP (opsional, tetap tersedia) | Aktif |
+| `--no-backup` | Nonaktifkan backup ZIP | Tidak aktif |
 | `--max-pages` | Batas maksimum halaman scraping | `20` |
 | `--input` | Path CSV lokal untuk diproses ulang | Scraping website |
 
-**Penting:** `--limit 50` adalah target, bukan jaminan mendapatkan 50 produk. Filter yang ketat, kegagalan koneksi, atau jumlah halaman yang terlalu sedikit bisa menyebabkan hasil kurang dari target. Untuk demonstrasi syarat minimal 30 record UTS, gunakan perintah tanpa filter kata kunci/harga.
+**Penting:** `--limit 30` adalah target, bukan jaminan mendapatkan 30 produk. Filter yang ketat, kegagalan koneksi, atau jumlah halaman yang terlalu sedikit bisa menyebabkan hasil kurang dari target. Untuk demonstrasi syarat minimal 30 record UTS, gunakan perintah tanpa filter kata kunci/harga.
 
 ## Struktur project
 
@@ -154,20 +161,19 @@ laptop-price-scraper-organizer/
 ├── main.py
 ├── requirements.txt
 ├── README.md
-├── .gitignore
 ├── data/                         # dibuat otomatis
 │   └── raw_data.txt             # JSON per baris dari HTML
 ├── output/                       # dibuat otomatis
 │   ├── hasil_scraping.csv
 │   └── laporan.txt
-├── backup/                       # dibuat bila --backup digunakan
+├── backup/                       # dibuat otomatis secara default
 │   └── backup_data.zip
 └── dokumentasi/                  # ditambahkan untuk pengumpulan UTS
     ├── laporan_uts.pdf
     └── video_demo.mp4
 ```
 
-Folder dan file output dibuat saat program dijalankan dengan data yang valid. Folder `dokumentasi/` serta isinya perlu dilengkapi secara terpisah untuk pengumpulan UTS.
+Folder dan file output dibuat saat program dijalankan dengan data yang valid. Jangan unggah `.venv/`, kredensial, atau file rahasia ke repository GitHub. Folder `dokumentasi/` serta isinya perlu dilengkapi secara terpisah untuk pengumpulan UTS.
 
 ## Penjelasan file output
 
@@ -187,10 +193,10 @@ Jalankan perintah berikut satu per satu:
 python main.py --help
 
 # 2. Scraping minimal 30 record, jika sumber tersedia
-python main.py --limit 50 --backup
+python main.py --limit 30 --backup
 
 # 3. Urutkan berdasarkan nama dari file CSV lokal
-python main.py --input output/hasil_scraping.csv --limit 50 --sort name
+python main.py --input output/hasil_scraping.csv --limit 30 --sort name
 
 # 4. Uji file tidak ditemukan
 python main.py --input file_tidak_ada.csv
@@ -198,3 +204,21 @@ python main.py --input file_tidak_ada.csv
 # 5. Uji validasi argumen
 python main.py --limit 0
 ```
+
+Hasil aktual scraping bergantung pada akses internet dan struktur website saat eksekusi. Untuk membuktikan persyaratan UTS, periksa jumlah baris dataset, isi ZIP, serta tampilan terminal.
+
+## Etika penggunaan
+
+- Gunakan hanya untuk pembelajaran dan sumber yang mengizinkan akses.
+- Jangan melewati login, CAPTCHA, atau pembatasan situs.
+- Hindari permintaan berlebihan; program menggunakan jeda antarhalaman.
+- Jangan mengumpulkan data pribadi sensitif.
+
+## Informasi akademik
+
+- Mata kuliah: Automation Systems
+- Bentuk tugas: Ujian Tengah Semester (proyek kelompok)
+- Program studi: Teknik Informatika
+- Universitas: Universitas Pelita Bangsa
+
+Nama anggota dan nomor kelompok dapat ditambahkan setelah data kelompok ditetapkan.

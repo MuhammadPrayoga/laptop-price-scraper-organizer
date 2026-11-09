@@ -1,3 +1,17 @@
+"""Laptop Price Scraper & Organizer - UTS Automation Systems.
+
+Sumber latihan: https://webscraper.io/test-sites/e-commerce/static/computers/laptops
+Mencakup Chapter 9-13: Regex, file I/O, organisasi & ZIP, CLI, web scraping.
+
+Instalasi:
+    python -m pip install requests beautifulsoup4
+
+Contoh:
+    python main.py --limit 30
+    python main.py --keyword ThinkPad --sort asc --limit 20 --backup
+    python main.py --input output/hasil_scraping.csv --sort desc --backup
+"""
+
 import argparse
 import csv
 import json
@@ -25,14 +39,19 @@ def parse_arguments():
         description="Scraping, pembersihan, dan perbandingan harga laptop."
     )
     parser.add_argument("--url", default=BASE_URL, help="URL katalog laptop statis")
-    parser.add_argument("--limit", type=int, default=50, help="Target record valid (default: 50)")
+    parser.add_argument("--limit", type=int, default=30, help="Target record valid (default: 30)")
     parser.add_argument("--keyword", default="", help="Cari pada nama/deskripsi laptop")
     parser.add_argument("--sort", choices=["asc", "desc", "name"], default="asc",
                         help="Urutan harga naik/turun atau nama")
     parser.add_argument("--min-price", type=float, default=None, help="Harga minimum USD")
     parser.add_argument("--max-price", type=float, default=None, help="Harga maksimum USD")
     parser.add_argument("--output", default="output", help="Folder untuk hasil CSV/TXT")
-    parser.add_argument("--backup", action="store_true", help="Buat arsip ZIP dari output")
+    backup_group = parser.add_mutually_exclusive_group()
+    backup_group.add_argument("--backup", dest="backup", action="store_true",
+                              help="Buat backup ZIP (aktif secara default)")
+    backup_group.add_argument("--no-backup", dest="backup", action="store_false",
+                              help="Jalankan tanpa membuat backup ZIP")
+    parser.set_defaults(backup=True)
     parser.add_argument("--max-pages", type=int, default=20, help="Batas halaman (default: 20)")
     parser.add_argument("--input", default=None,
                         help="Gunakan CSV yang sudah ada, tanpa mengambil data dari web")
@@ -346,7 +365,7 @@ def main():
             archive = make_backup([raw_path, csv_path, report_path])
             print(f"[OK] Backup ZIP  : {archive}")
         else:
-            print("[INFO] Backup tidak diminta (tambahkan --backup).")
+            print("[INFO] Backup dinonaktifkan (--no-backup).")
         if len(rows) < 30:
             print(f"[PERINGATAN] Hasil hanya {len(rows)} record, belum memenuhi target UTS 30 record.")
         if len(rows) < args.limit:
